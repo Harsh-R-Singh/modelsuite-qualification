@@ -2,13 +2,27 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import API from '../api/axios';
-import '../styles/auth.css';
+
+const Logo = ({ id }) => (
+  <svg viewBox="0 0 40 40" fill="none" className="w-11 h-11">
+    <rect width="40" height="40" rx="12" fill={`url(#${id})`} />
+    <path d="M12 20L18 26L28 14" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+    <defs>
+      <linearGradient id={id} x1="0" y1="0" x2="40" y2="40">
+        <stop stopColor="#6366f1" /><stop offset="1" stopColor="#8b5cf6" />
+      </linearGradient>
+    </defs>
+  </svg>
+);
+
+const inputCls = 'w-full bg-bg-input border border-border rounded-[10px] px-4 py-3 text-[15px] text-text-primary outline-none placeholder:text-[#4e4a6e] focus:border-primary focus:ring-[3px] focus:ring-primary/20 transition-all font-sans';
+const labelCls = 'text-[11px] font-semibold uppercase tracking-[0.6px] text-text-muted';
 
 const LoginPage = () => {
-  const [email, setEmail] = useState('');
+  const [email, setEmail]       = useState('');
   const [password, setPassword] = useState('');
-  const { login } = useAuth();
-  const navigate = useNavigate();
+  const { login }   = useAuth();
+  const navigate    = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,94 +30,80 @@ const LoginPage = () => {
     try {
       const { data } = await API.post('/auth/login', { email, password });
       login(data);
-      if (data.role === 'Admin') {
-        navigate('/admin/dashboard');
-      } else {
-        navigate('/talent/dashboard');
-      }
-    } catch (error) {
-      // Intentional gap: using alert() instead of a proper toast/error component
-      alert(error.response?.data?.message || 'Login failed');
+      data.role === 'Admin' ? navigate('/admin/dashboard') : navigate('/talent/dashboard');
+    } catch (err) {
+      // Intentional gap: alert() instead of toast
+      alert(err.response?.data?.message || 'Login failed');
     }
   };
 
   return (
-    <div className="auth-page">
-      <div className="auth-card">
-        <div className="auth-brand">
-          <div className="auth-logo">
-            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect width="40" height="40" rx="12" fill="url(#grad1)" />
-              <path d="M12 20L18 26L28 14" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-              <defs>
-                <linearGradient id="grad1" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
-                  <stop stopColor="#6366f1" />
-                  <stop offset="1" stopColor="#8b5cf6" />
-                </linearGradient>
-              </defs>
-            </svg>
-          </div>
-          <h1 className="auth-title">Task Pipeline</h1>
-          <p className="auth-subtitle">Sign in to your workspace</p>
+    <div className="grid min-h-screen grid-cols-1 lg:grid-cols-[480px_1fr]">
+
+      {/* ── Left: Form panel ── */}
+      <div className="relative flex flex-col justify-center px-14 py-16 bg-bg-card border-r border-border overflow-hidden sidebar-glow">
+        {/* Brand */}
+        <div className="mb-10 relative z-10" style={{ filter: 'drop-shadow(0 4px 16px rgba(99,102,241,0.4))' }}>
+          <Logo id="login-grad" />
         </div>
 
-        <form className="auth-form" onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="email">Email address</label>
-            <input
-              id="email"
-              type="email"
-              placeholder="you@company.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
+        <div className="mb-10 relative z-10">
+          <h1 className="text-[26px] font-bold tracking-tight text-text-primary mb-1.5">Task Pipeline</h1>
+          <p className="text-sm text-text-muted">Sign in to your workspace</p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="flex flex-col gap-5 relative z-10">
+          <div className="flex flex-col gap-2">
+            <label className={labelCls} htmlFor="email">Email address</label>
+            <input id="email" type="email" placeholder="you@company.com"
+              value={email} onChange={(e) => setEmail(e.target.value)} required className={inputCls} />
           </div>
 
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input
-              id="password"
-              type="password"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+          <div className="flex flex-col gap-2">
+            <label className={labelCls} htmlFor="password">Password</label>
+            <input id="password" type="password" placeholder="••••••••"
+              value={password} onChange={(e) => setPassword(e.target.value)} required className={inputCls} />
             {/* Intentional gap: no "Forgot password?" link */}
           </div>
 
-          <button type="submit" className="auth-btn">
+          <button type="submit"
+            className="mt-1.5 w-full py-3.5 rounded-[10px] text-[15px] font-semibold text-white cursor-pointer btn-gradient border-none">
             Sign In
           </button>
         </form>
 
-        <p className="auth-switch">
+        <p className="mt-7 text-sm text-text-muted text-center relative z-10">
           Don&apos;t have an account?{' '}
-          <Link to="/register">Create one</Link>
+          <Link to="/register" className="text-primary font-medium hover:text-secondary hover:underline transition-colors">
+            Create one
+          </Link>
         </p>
       </div>
 
-      <div className="auth-visual">
-        <div className="visual-content">
-          <h2>Manage Tasks,<br />Streamline Talent.</h2>
-          <p>Assign, track, and complete tasks across your entire talent pool — all in one place.</p>
-          <div className="visual-stats">
-            <div className="stat">
-              <span className="stat-num">98%</span>
-              <span className="stat-label">Task Completion</span>
-            </div>
-            <div className="stat">
-              <span className="stat-num">3x</span>
-              <span className="stat-label">Faster Onboarding</span>
-            </div>
-            <div className="stat">
-              <span className="stat-num">500+</span>
-              <span className="stat-label">Talents Managed</span>
-            </div>
+      {/* ── Right: Visual panel ── */}
+      <div className="hidden lg:flex items-center justify-center relative overflow-hidden p-16"
+        style={{ background: 'linear-gradient(140deg, #0d0c1a 0%, #13103a 50%, #0f1229 100%)' }}>
+        <div className="auth-orb-1" />
+        <div className="auth-orb-2" />
+        <div className="relative z-10 max-w-[440px]">
+          <h2 className="text-[42px] font-extrabold leading-[1.15] tracking-tight gradient-text mb-5">
+            Manage Tasks,<br />Streamline Talent.
+          </h2>
+          <p className="text-base text-text-muted leading-relaxed mb-12">
+            Assign, track, and complete tasks across your entire talent pool — all in one place.
+          </p>
+          <div className="flex gap-10">
+            {[{ num: '98%', label: 'Task Completion' }, { num: '3x', label: 'Faster Onboarding' }, { num: '500+', label: 'Talents Managed' }]
+              .map(({ num, label }) => (
+                <div key={label} className="flex flex-col gap-1">
+                  <span className="text-[28px] font-bold text-text-primary tracking-tight">{num}</span>
+                  <span className="text-[11px] text-text-muted uppercase tracking-[0.8px] font-medium">{label}</span>
+                </div>
+              ))}
           </div>
         </div>
       </div>
+
     </div>
   );
 };
