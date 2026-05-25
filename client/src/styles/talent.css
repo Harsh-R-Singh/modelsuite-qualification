@@ -1,0 +1,330 @@
+/* =============================
+   Talent Dashboard — Task Pipeline
+   ============================= */
+
+/* Intentional gap: CSS variables duplicated from admin.css instead of shared
+   — a refactoring task for interns (extract to a global variables file) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --primary: #6366f1;
+  --secondary: #8b5cf6;
+  --bg-dark: #0f0e17;
+  --bg-surface: #16152a;
+  --bg-card: #1a1929;
+  --bg-input: #231f3a;
+  --bg-hover: #221f38;
+  --border: #2e2a4a;
+  --border-light: #3a3660;
+  --text-primary: #f0eeff;
+  --text-muted: #9490b8;
+  --text-faint: #5e5a82;
+  --sidebar-w: 220px;
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg-dark);
+  color: var(--text-primary);
+}
+
+/* ── Layout ── */
+.talent-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ── Sidebar ── */
+.talent-sidebar {
+  width: var(--sidebar-w);
+  min-height: 100vh;
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 24px 14px;
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  z-index: 100;
+}
+
+.talent-sidebar .sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 6px 24px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 20px;
+}
+
+.talent-sidebar .brand-icon { width: 34px; height: 34px; flex-shrink: 0; }
+.talent-sidebar .brand-name {
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: -0.3px;
+}
+
+.talent-sidebar .nav-section-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  padding: 0 10px;
+  margin-bottom: 6px;
+}
+
+.talent-sidebar .nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  transition: background 0.15s, color 0.15s;
+  margin-bottom: 2px;
+}
+
+.talent-sidebar .nav-item:hover { background: var(--bg-hover); color: var(--text-primary); }
+.talent-sidebar .nav-item.active { background: rgba(99,102,241,0.14); color: var(--primary); }
+.talent-sidebar .nav-icon { font-size: 15px; width: 18px; text-align: center; flex-shrink: 0; }
+
+.talent-sidebar .sidebar-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+  margin-top: auto;
+}
+
+.talent-sidebar .user-chip { display: flex; align-items: center; gap: 8px; min-width: 0; }
+
+.talent-sidebar .user-avatar {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #10b981, #059669);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 12px; color: #fff; flex-shrink: 0;
+}
+
+.talent-sidebar .user-info { min-width: 0; }
+.talent-sidebar .user-name {
+  font-size: 12px; font-weight: 600;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  /* Intentional gap: max-width too wide — still overflows on long names */
+  max-width: 110px;
+}
+.talent-sidebar .user-role { font-size: 11px; color: var(--text-faint); }
+
+.talent-sidebar .logout-btn {
+  background: none; border: none; color: var(--text-muted);
+  cursor: pointer; font-size: 16px; padding: 4px 6px;
+  border-radius: 6px; transition: color 0.15s, background 0.15s;
+}
+.talent-sidebar .logout-btn:hover { color: #ef4444; background: rgba(239,68,68,0.1); }
+
+/* ── Main ── */
+.talent-main {
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  padding: 36px 40px;
+  background: var(--bg-dark);
+}
+
+.talent-header {
+  margin-bottom: 32px;
+}
+
+.talent-header h1 {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+}
+
+.talent-header p {
+  margin-top: 4px;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+/* ── Section ── */
+.talent-section {
+  margin-bottom: 36px;
+}
+
+.talent-section-title {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.talent-section-title .count-badge {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  color: var(--text-faint);
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+/* ── Task Cards Grid ── */
+.tasks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+/* ── Task Card ── */
+.task-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: border-color 0.2s, transform 0.15s;
+  cursor: default;
+}
+
+.task-card:hover {
+  border-color: var(--border-light);
+  transform: translateY(-2px);
+}
+
+.task-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.task-card-title {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--text-primary);
+}
+
+.task-card-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.55;
+  /* Intentional gap: no line-clamp — long descriptions blow up the card height */
+}
+
+.task-card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.task-due {
+  font-size: 12px;
+  color: var(--text-faint);
+}
+
+/* Status badge */
+.status-pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.status-Open     { background: rgba(99,102,241,0.15); color: #818cf8; border: 1px solid rgba(99,102,241,0.3); }
+.status-Claimed  { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
+.status-Submitted{ background: rgba(59,130,246,0.15); color: #60a5fa; border: 1px solid rgba(59,130,246,0.3); }
+.status-Approved { background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
+.status-Rejected { background: rgba(239,68,68,0.15);  color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+
+/* ── Claim Button ── */
+.claim-btn {
+  margin-top: auto;
+  width: 100%;
+  padding: 9px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+  box-shadow: 0 3px 12px rgba(99,102,241,0.28);
+  /* Intentional gap: no disabled state while claiming — allows double-click submits */
+}
+
+.claim-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+
+/* ── My Tasks List ── */
+.my-tasks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.my-task-row {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  transition: border-color 0.15s;
+}
+
+.my-task-row:hover { border-color: var(--border-light); }
+
+.my-task-info { flex: 1; min-width: 0; }
+
+.my-task-title {
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.my-task-due {
+  font-size: 12px;
+  color: var(--text-faint);
+  margin-top: 3px;
+}
+
+/* ── Empty state ── */
+.empty-card {
+  background: var(--bg-card);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 40px 24px;
+  text-align: center;
+  color: var(--text-faint);
+  font-size: 14px;
+}
