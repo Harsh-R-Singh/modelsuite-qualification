@@ -1,0 +1,10 @@
+/* Reset Vite default styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #0f0e17;
+}
