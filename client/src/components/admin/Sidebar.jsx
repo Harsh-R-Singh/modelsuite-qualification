@@ -2,9 +2,10 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
 const navItems = [
-  { label: 'Dashboard', path: '/admin/dashboard', icon: '▦' },
-  { label: 'Tasks',     path: '/admin/tasks',     icon: '✓' },
-  { label: 'Talents',   path: '/admin/talents',   icon: '👤' },
+  { label: 'Dashboard',   path: '/admin/dashboard',   icon: '▦'  },
+  { label: 'Tasks',       path: '/admin/tasks',       icon: '✓'  },
+  { label: 'Submissions', path: '/admin/submissions', icon: '📋' },
+  { label: 'Talents',     path: '/admin/talents',     icon: '👤' },
 ];
 
 const Sidebar = () => {
