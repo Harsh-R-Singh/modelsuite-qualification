@@ -8,3 +8,9 @@ export const submitTask = (taskId, formData) =>
   });
 
 export const fetchSubmission = (taskId) => API.get(`/submissions/${taskId}`);
+
+export const fetchAllSubmissions = () => API.get('/submissions/admin/all');
+
+export const reviewSubmission = (id, reviewStatus) =>
+  API.put(`/submissions/${id}/review`, { reviewStatus });
+
