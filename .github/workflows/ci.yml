@@ -218,13 +218,18 @@ jobs:
           script: |
             const owner = context.repo.owner;
             const repo = context.repo.repo;
-            const pr = context.payload.pull_request.number;
-            const author = context.payload.pull_request.user.login;
-            const failures = `The following CI jobs failed:\n\n${process.env.FAILURES}`;
+            const prObj = context.payload.pull_request;
+            const failures = process.env.FAILURES || '';
             const runUrl = `${process.env.GITHUB_SERVER_URL}/${owner}/${repo}/actions/runs/${process.env.GITHUB_RUN_ID}`;
-            const body = `@${author}\n\n${failures}\nLogs: ${runUrl}\n\nThis PR will be closed automatically.`;
-            await github.issues.createComment({ owner, repo, issue_number: pr, body });
-            await github.pulls.update({ owner, repo, pull_number: pr, state: 'closed' });
+            if (!prObj) {
+              console.log('No pull_request found in event payload; skipping comment/close.');
+            } else {
+              const pr = prObj.number;
+              const author = prObj.user ? prObj.user.login : '';
+              const body = `@${author}\n\nThe following CI jobs failed:\n\n${failures}\nLogs: ${runUrl}\n\nThis PR will be closed automatically.`;
+              await github.rest.issues.createComment({ owner, repo, issue_number: pr, body });
+              await github.rest.pulls.update({ owner, repo, pull_number: pr, state: 'closed' });
+            }
         env:
           FAILURES: ${{ steps.build-failure.outputs.failures }}
           
