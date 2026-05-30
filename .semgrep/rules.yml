@@ -24,14 +24,14 @@ rules:
   languages: [js, ts, jsx, tsx]
   severity: WARNING
   pattern-regex: |
-    (?i)\\b(TODO|FIXME)\\b
+    (?i)\b(TODO|FIXME)\b
 
 - id: hardcoded-secrets
   message: "Hardcoded secret detected. Do not commit passwords or keys; use secrets management."
   languages: [js, ts, jsx, tsx]
   severity: ERROR
   pattern-regex: |
-    ^(\\s*)(?:const|let|var)\\s+(?:password|secret|apiKey|token|privateKey)\\s*=\\s*['\\\"`].*['\\\"`]
+    ^(\s*)(?:const|let|var)\s+(?:password|secret|apiKey|token|privateKey)\s*=\s*['"`].*['"`]
 
 - id: debugger-statement
   message: "Remove debugger statements from committed code. They pause execution in users' environments."
