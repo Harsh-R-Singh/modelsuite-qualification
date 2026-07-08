@@ -1,18 +1,18 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { submitTask } from '../../api/submissions';
 
 const SubmitTaskModal = ({ task, onClose, onSubmitted }) => {
-  const [file, setFile]   = useState(null);
+  const [files, setFiles]   = useState([]);
   const [notes, setNotes] = useState('');
 
   const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+    setFiles(Array.from(e.target.files));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-    if (file) formData.append('file', file);
+    files.forEach(f => formData.append('files', f));
     formData.append('notes', notes);
     try {
       await submitTask(task._id, formData);
@@ -53,15 +53,19 @@ const SubmitTaskModal = ({ task, onClose, onSubmitted }) => {
               Upload File
             </label>
             
-            <input id="sub-file" type="file" onChange={handleFileChange} className="file-input-hidden" />
+            <input id="sub-file" type="file" multiple onChange={handleFileChange} className="file-input-hidden" />
             <label htmlFor="sub-file"
               className="flex flex-col items-center justify-center gap-2 py-7 px-4 bg-bg-input border-2 border-dashed border-border rounded-lg cursor-pointer hover:border-primary hover:bg-primary/5 transition-all text-center">
-              {file ? (
-                <span className="text-[13px] text-primary font-medium break-all">📎 {file.name}</span>
+              {files.length > 0 ? (
+                <div className="flex flex-col items-center gap-1">
+                  {files.map((f, i) => (
+                    <span key={i} className="text-[13px] text-primary font-medium break-all">📎 {f.name}</span>
+                  ))}
+                </div>
               ) : (
                 <>
                   <span className="text-xl">⬆</span>
-                  <span className="text-[13px] text-text-muted">Click to choose a file</span>
+                  <span className="text-[13px] text-text-muted">Click to choose files</span>
                   
                 </>
               )}

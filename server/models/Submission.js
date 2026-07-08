@@ -1,4 +1,4 @@
-﻿const mongoose = require('mongoose');
+const mongoose = require('mongoose');
 //   multiple times for the same task (no duplicate prevention)
 const submissionSchema = new mongoose.Schema(
   {
@@ -13,6 +13,9 @@ const submissionSchema = new mongoose.Schema(
     fileUrl: {
       type: String,
     },
+    fileUrls: [{
+      type: String,
+    }],
     notes: {
       type: String,
     },

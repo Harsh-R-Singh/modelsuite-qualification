@@ -1,4 +1,4 @@
-﻿const Submission = require('../models/Submission');
+const Submission = require('../models/Submission');
 const Task = require('../models/Task');
 
 // @desc  Submit a task with a file upload
@@ -12,24 +12,31 @@ const submitTask = async (req, res) => {
     // — any authenticated user can submit for any task
     // — a talent can "submit" an Open or Approved task
 
-    // Build the file URL from multer's saved file
-    // with a different PORT or base URL
-    const fileUrl = req.file
-      ? `http://localhost:5000/uploads/${req.file.filename}`
-      : req.body.fileUrl || null;
+    // Build file URLs from multer's saved files
+    let fileUrls = [];
+    if (req.files && req.files.length > 0) {
+      fileUrls = req.files.map((file) => `http://localhost:5000/uploads/${file.filename}`);
+    } else if (req.body.fileUrls) {
+      fileUrls = Array.isArray(req.body.fileUrls) ? req.body.fileUrls : [req.body.fileUrls];
+    } else if (req.body.fileUrl) {
+      fileUrls = [req.body.fileUrl];
+    }
     // — no audit trail of re-submissions
     let submission = await Submission.findOne({ taskId, talentId: req.user._id });
 
     if (submission) {
       // Overwrite: update in place
-      submission.fileUrl = fileUrl;
+      submission.fileUrls = fileUrls;
+      // fallback for older code, can point to first file if any
+      submission.fileUrl = fileUrls.length > 0 ? fileUrls[0] : null; 
       submission.notes = notes;
       await submission.save();
     } else {
       submission = await Submission.create({
         taskId,
         talentId: req.user._id,
-        fileUrl,
+        fileUrls,
+        fileUrl: fileUrls.length > 0 ? fileUrls[0] : null,
         notes,
       });
     }

@@ -1,4 +1,4 @@
-﻿import { reviewSubmission } from '../../api/submissions';
+import { reviewSubmission } from '../../api/submissions';
 
 const REVIEW_STATUS_CLASS = {
   Pending:  'status-badge-Submitted',
@@ -85,8 +85,20 @@ const SubmissionReviewModal = ({ submission, onClose, onReviewed }) => {
 
           {/* File */}
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.5px] text-text-faint mb-2">Submitted File</p>
-            {submission.fileUrl ? (
+            <p className="text-[11px] font-semibold uppercase tracking-[0.5px] text-text-faint mb-2">Submitted Files</p>
+            {submission.fileUrls && submission.fileUrls.length > 0 ? (
+              <div className="flex flex-col gap-2">
+                {submission.fileUrls.map((url, i) => (
+                  <a key={i} href={url} target="_blank" rel="noreferrer"
+                    className="flex items-center gap-2.5 text-[13px] text-primary font-medium hover:text-secondary transition-colors">
+                    <span className="text-base">📎</span>
+                    
+                    <span className="underline underline-offset-2 truncate">{url}</span>
+                    <span className="text-text-faint text-[11px] shrink-0">↗ open</span>
+                  </a>
+                ))}
+              </div>
+            ) : submission.fileUrl ? (
               <a href={submission.fileUrl} target="_blank" rel="noreferrer"
                 className="flex items-center gap-2.5 text-[13px] text-primary font-medium hover:text-secondary transition-colors">
                 <span className="text-base">📎</span>
