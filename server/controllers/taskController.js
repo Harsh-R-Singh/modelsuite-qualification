@@ -41,6 +41,14 @@ const getTaskById = async (req, res) => {
 const createTask = async (req, res) => {
   const { title, description, status, assignedTo, dueDate } = req.body;
 
+  if (!title || typeof title !== 'string' || title.trim() === '') {
+    return res.status(400).json({ message: 'Title is required and cannot be empty' });
+  }
+
+  if (!description || typeof description !== 'string' || description.trim() === '') {
+    return res.status(400).json({ message: 'Description is required and cannot be empty' });
+  }
+
   try {
     if (assignedTo) {
       const user = await User.findById(assignedTo);
@@ -70,6 +78,16 @@ const createTask = async (req, res) => {
 // @route PUT /api/tasks/:id
 // @access Admin
 const updateTask = async (req, res) => {
+  const { title, description } = req.body;
+
+  if (title !== undefined && (typeof title !== 'string' || title.trim() === '')) {
+    return res.status(400).json({ message: 'Title cannot be empty' });
+  }
+
+  if (description !== undefined && (typeof description !== 'string' || description.trim() === '')) {
+    return res.status(400).json({ message: 'Description cannot be empty' });
+  }
+
   try {
     if (req.body.assignedTo) {
       const user = await User.findById(req.body.assignedTo);
