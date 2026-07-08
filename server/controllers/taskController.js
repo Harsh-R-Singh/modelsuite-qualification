@@ -1,4 +1,5 @@
-﻿const Task = require('../models/Task');
+const Task = require('../models/Task');
+const User = require('../models/User');
 
 // @desc  Get all tasks
 // @route GET /api/tasks
@@ -41,6 +42,15 @@ const createTask = async (req, res) => {
   const { title, description, status, assignedTo, dueDate } = req.body;
 
   try {
+    if (assignedTo) {
+      const user = await User.findById(assignedTo);
+      if (!user) {
+        return res.status(404).json({ message: 'Assigned user not found' });
+      }
+      if (user.role !== 'Talent') {
+        return res.status(400).json({ message: 'Tasks can only be assigned to Talent users' });
+      }
+    }
     const task = await Task.create({
       title,
       description,
@@ -61,6 +71,16 @@ const createTask = async (req, res) => {
 // @access Admin
 const updateTask = async (req, res) => {
   try {
+    if (req.body.assignedTo) {
+      const user = await User.findById(req.body.assignedTo);
+      if (!user) {
+        return res.status(404).json({ message: 'Assigned user not found' });
+      }
+      if (user.role !== 'Talent') {
+        return res.status(400).json({ message: 'Tasks can only be assigned to Talent users' });
+      }
+    }
+
     const task = await Task.findById(req.params.id);
     if (!task) return res.status(404).json({ message: 'Task not found' });
     // including internal fields like createdBy or __v
