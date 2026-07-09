@@ -1,4 +1,5 @@
 import { reviewSubmission } from '../../api/submissions';
+import Avatar from '../common/Avatar';
 
 const REVIEW_STATUS_CLASS = {
   Pending:  'status-badge-Submitted',
@@ -57,9 +58,12 @@ const SubmissionReviewModal = ({ submission, onClose, onReviewed }) => {
 
           {/* Talent info */}
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full avatar-talent flex items-center justify-center text-[13px] font-bold text-white shrink-0">
-              {talent.name?.[0] ?? 'T'}
-            </div>
+            <Avatar 
+              name={talent.name} 
+              role="talent" 
+              src={talent.avatarUrl}
+              className="w-9 h-9 text-[13px]"
+            />
             <div>
               <p className="text-[14px] font-medium text-text-primary">{talent.name || 'Unknown Talent'}</p>
               <p className="text-[12px] text-text-faint">{talent.email || '—'}</p>

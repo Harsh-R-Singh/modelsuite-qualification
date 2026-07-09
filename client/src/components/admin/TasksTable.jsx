@@ -1,4 +1,5 @@
 import { deleteTask } from '../../api/tasks';
+import Avatar from '../common/Avatar';
 
 /* ── SVG Action Icons ── */
 const IconEdit = () => (
@@ -109,15 +110,13 @@ const TasksTable = ({ tasks, onEdit, onRefresh }) => {
               <td className="table-td" style={{ whiteSpace: 'nowrap' }}>
                 {task.assignedTo ? (
                   <div className="flex items-center gap-2">
-                    <div
-                      className="flex items-center justify-center text-[11px] font-bold text-white shrink-0"
-                      style={{
-                        width: '26px', height: '26px', borderRadius: '50%',
-                        background: getAvatarGradient(task.assignedTo.name || ''),
-                        fontFamily: 'Inter, sans-serif',
-                      }}>
-                      {task.assignedTo.name?.[0]?.toUpperCase()}
-                    </div>
+                    <Avatar 
+                      name={task.assignedTo.name} 
+                      role="talent" 
+                      src={task.assignedTo.avatarUrl}
+                      className="w-[26px] h-[26px] text-[11px]"
+                      style={{ background: getAvatarGradient(task.assignedTo.name || '') }}
+                    />
                     <span style={{ color: '#E5E2E1' }}>{task.assignedTo.name}</span>
                   </div>
                 ) : (

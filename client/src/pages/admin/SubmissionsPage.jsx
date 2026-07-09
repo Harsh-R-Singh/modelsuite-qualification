@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import Sidebar from '../../components/admin/Sidebar';
 import SubmissionReviewModal from '../../components/admin/SubmissionReviewModal';
 import { fetchAllSubmissions } from '../../api/submissions';
+import Avatar from '../../components/common/Avatar';
 
 const REVIEW_STATUS_CLASS = {
   Pending:  'status-badge-Submitted',
@@ -101,9 +102,12 @@ const SubmissionsPage = () => {
                       {/* Talent */}
                       <td className={`${tdCls} whitespace-nowrap`}>
                         <div className="flex items-center gap-2">
-                          <div className="w-[26px] h-[26px] rounded-full avatar-talent flex items-center justify-center text-[11px] font-bold text-white shrink-0">
-                            {sub.talentId?.name?.[0] ?? '?'}
-                          </div>
+                          <Avatar 
+                            name={sub.talentId?.name} 
+                            role="talent" 
+                            src={sub.talentId?.avatarUrl}
+                            className="w-[26px] h-[26px] text-[11px]"
+                          />
                           <span className="text-text-primary">{sub.talentId?.name || '—'}</span>
                         </div>
                       </td>
