@@ -15,7 +15,8 @@ const submitTask = async (req, res) => {
     // Build file URLs from multer's saved files
     let fileUrls = [];
     if (req.files && req.files.length > 0) {
-      fileUrls = req.files.map((file) => `http://localhost:5000/uploads/${file.filename}`);
+      const baseUrl = `${req.protocol}://${req.get('host')}`;
+      fileUrls = req.files.map((file) => `${baseUrl}/uploads/${file.filename}`);
     } else if (req.body.fileUrls) {
       fileUrls = Array.isArray(req.body.fileUrls) ? req.body.fileUrls : [req.body.fileUrls];
     } else if (req.body.fileUrl) {
